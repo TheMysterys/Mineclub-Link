@@ -33,25 +33,29 @@ function messageCreator(type, args) {
 		}
 		return msg;
 	} else if (type == "exit") {
-		let ratio = (args.stats.tokenTimesEarnt / args.stats.tokenMessages).toFixed(
-			3
-		);
+		let ratio = (
+			args.stats.tokenTimesEarnt / args.stats.tokenMessages
+		).toFixed(3);
+		if (isNaN(ratio)) {
+			ratio = 0;
+		}
 		msg = [
 			`Session Time: ${formatDuration(
 				args.stats.endTime - args.stats.startTime
 			)}`,
 			`Tokens Ratio: \`${args.stats.tokenTimesEarnt} : ${args.stats.tokenMessages}\` (${ratio})`,
 			`Tokens Earnt: ${args.stats.totalTokensEarnt.toLocaleString()} ${
-				args.season
+				args.season ? args.season : ""
 			}`,
 			`Total Gems Earnt: ${args.stats.totalGems.toLocaleString()} ${gemEmoji(
 				args.stats.totalGems
-			)}]}`,
+			)}`,
 		].join("\n");
 		if (config.stats.goodnights) {
-			msg = msg + `\nGoodbyes Sent: ${args.stats.goodnights.toLocaleString()}`;
+			msg =
+				msg +
+				`\nGoodbyes Sent: ${args.stats.goodnights.toLocaleString()}`;
 		}
-		
 	}
 	return msg;
 }
