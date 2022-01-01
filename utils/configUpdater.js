@@ -1,12 +1,11 @@
 const fs = require("fs");
-const path = require("path");
 
 const EXAMPLE_CONFIG = require("../example-config");
 const CONFIG_PATH = "./config.js";
 
-function configUpdater() {
+async function configUpdater() {
 	try {
-		if (fs.existsSync(path.resolve(CONFIG_PATH))) {
+		if (fs.existsSync(CONFIG_PATH)) {
 			const CURRENT_CONFIG = require("../config");
 
 			if (CURRENT_CONFIG.configVersion == EXAMPLE_CONFIG.configVersion) {
@@ -27,21 +26,18 @@ function configUpdater() {
 			// Format JSON (and remove "" around var names)
 			let json = JSON.stringify(EXAMPLE_CONFIG, null, 2);
 			json = json.replace(/"([^"]+)":/g, "$1:");
-
-			fs.writeFile(
-				path.resolve("./config.js"),
+			await fs.writeFileSync(
+				"./config.js",
 				`module.exports = ${json}`,
 				function (err) {
 					if (err) return console.log(err);
-					process.exit();
 				}
 			);
 		} else {
 			console.log("### No Config file found. Creating it! ###");
 
-			fs.copyFile(path.resolve("./example-config.js"), path.resolve("./config.js"), function (err) {
+			fs.copyFile("./example-config.js", "./config.js", function (err) {
 				if (err) return console.log(err);
-				process.exit();
 			});
 		}
 	} catch (err) {
