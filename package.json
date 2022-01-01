@@ -1,0 +1,17 @@
+{
+  "name": "mineclub-link",
+  "version": "1.0.0",
+  "description": "A AFK bot for Mineclub",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [],
+  "author": "TheMysterys",
+  "license": "ISC",
+  "dependencies": {
+    "centra": "^2.5.0",
+    "format-duration": "^1.4.0",
+    "mineflayer": "github:PrismarineJS/mineflayer#pull/2217/head"
+  }
+}
