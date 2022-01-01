@@ -11,11 +11,11 @@ const tokenList = {
 
 const emojiList = {
 	// Gem emotes
-	"gem100": "<:Gem_100:ID>",
-	"gem1k": "<:Gem_1k:ID>",
-	"gem10k": "<:Gem_10k:ID>",
-	"gem100k": "<:Gem_100k:ID>",
-	"gemmil": "<:Gem_1m:ID>",
+	"gem100": "<:Gem_100:837390660952653844>",
+	"gem1k": "<:Gem_1k:837390660968513607>",
+	"gem10k": "<:Gem_10k:837390660705320993>",
+	"gem100k": "<:Gem_100k:837390660926570608>",
+	"gemmil": "<:Gem_1m:837390661094211644>",
 	
 	// Emojis from Discord server for conversion
 	// Ahhhhhh (This will take some time and I think some don't exist. Might have to create a asset server)
