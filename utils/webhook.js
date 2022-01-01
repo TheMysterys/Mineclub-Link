@@ -6,8 +6,8 @@ async function sendWebhook(type, args) {
 	if (type == "token") {
 		await c(WEBHOOK_URL, "POST")
 			.body({
-				username: `Mineclub Link [${args.USERNAME}]`,
-				avatar_url: `https://crafatar.com/renders/head/${args.UUID}?overlay`,
+				username: `Mineclub Link [${args.webhookInfo.USERNAME}]`,
+				avatar_url: `https://crafatar.com/renders/head/${args.webhookInfo.UUID}?overlay`,
 				embeds: [
 					{
 						title: "Tokens Earnt",
@@ -23,8 +23,8 @@ async function sendWebhook(type, args) {
 	if (type == "gems") {
 		await c(WEBHOOK_URL, "POST")
 			.body({
-				username: `Mineclub Link [${args.USERNAME}]`,
-				avatar_url: `https://crafatar.com/renders/head/${args.UUID}?overlay`,
+				username: `Mineclub Link [${args.webhookInfo.USERNAME}]`,
+				avatar_url: `https://crafatar.com/renders/head/${args.webhookInfo.UUID}?overlay`,
 				embeds: [
 					{
 						title: "Gems Earnt",
@@ -40,8 +40,8 @@ async function sendWebhook(type, args) {
 	if (type == "mention") {
 		await c(WEBHOOK_URL, "POST")
 			.body({
-				username: `Mineclub Link [${args.USERNAME}]`,
-				avatar_url: `https://crafatar.com/renders/head/${args.UUID}?overlay`,
+				username: `Mineclub Link [${args.webhookInfo.USERNAME}]`,
+				avatar_url: `https://crafatar.com/renders/head/${args.webhookInfo.UUID}?overlay`,
 				embeds: [
 					{
 						author: {
@@ -59,8 +59,8 @@ async function sendWebhook(type, args) {
 	if (type == "dm") {
 		await c(WEBHOOK_URL, "POST")
 			.body({
-				username: `Mineclub Link [${args.USERNAME}]`,
-				avatar_url: `https://crafatar.com/renders/head/${args.UUID}?overlay`,
+				username: `Mineclub Link [${args.webhookInfo.USERNAME}]`,
+				avatar_url: `https://crafatar.com/renders/head/${args.webhookInfo.UUID}?overlay`,
 				embeds: [
 					{
 						author: {
@@ -78,8 +78,8 @@ async function sendWebhook(type, args) {
 	if (type == "join") {
 		await c(WEBHOOK_URL, "POST")
 			.body({
-				username: `Mineclub Link [${args.USERNAME}]`,
-				avatar_url: `https://crafatar.com/renders/head/${args.UUID}?overlay`,
+				username: `Mineclub Link [${args.webhookInfo.USERNAME}]`,
+				avatar_url: `https://crafatar.com/renders/head/${args.webhookInfo.UUID}?overlay`,
 				embeds: [
 					{
 						title: "Connected to Mineclub",
@@ -97,8 +97,8 @@ async function sendWebhook(type, args) {
 		}
 		await c(WEBHOOK_URL, "POST")
 			.body({
-				username: `Mineclub Link [${args.USERNAME}]`,
-				avatar_url: `https://crafatar.com/renders/head/${args.UUID}?overlay`,
+				username: `Mineclub Link [${args.webhookInfo.USERNAME}]`,
+				avatar_url: `https://crafatar.com/renders/head/${args.webhookInfo.UUID}?overlay`,
 				embeds: [
 					{
 						title: "Kicked from Mineclub",
@@ -120,8 +120,8 @@ async function sendWebhook(type, args) {
 		}
 		await c(WEBHOOK_URL, "POST")
 			.body({
-				username: `Mineclub Link [${args.USERNAME}]`,
-				avatar_url: `https://crafatar.com/renders/head/${args.UUID}?overlay`,
+				username: `Mineclub Link [${args.webhookInfo.USERNAME}]`,
+				avatar_url: `https://crafatar.com/renders/head/${args.webhookInfo.UUID}?overlay`,
 				embeds: [
 					{
 						title: "Disconnected from Mineclub",
@@ -140,8 +140,8 @@ async function sendWebhook(type, args) {
 		}
 		await c(WEBHOOK_URL, "POST")
 			.body({
-				username: `Mineclub Link [${args.USERNAME}]`,
-				avatar_url: `https://crafatar.com/renders/head/${args.UUID}?overlay`,
+				username: `Mineclub Link [${args.webhookInfo.USERNAME}]`,
+				avatar_url: `https://crafatar.com/renders/head/${args.webhookInfo.UUID}?overlay`,
 				embeds: [
 					{
 						title: "Crash",
