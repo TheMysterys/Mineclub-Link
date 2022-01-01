@@ -1,7 +1,41 @@
+const { configUpdater } = require("./utils/configUpdater");
+var config;
+
+// Check that config is up to date
+try {
+	config = require("./config");
+	const EXAMPLE_CONFIG = require("./example-config");
+	if (config.configVersion != EXAMPLE_CONFIG.configVersion){
+		configUpdater()
+		process.exit()
+	}
+}catch(err){
+	configUpdater();
+	process.exit()
+}
+
 const mineflayer = require("mineflayer");
-const config = require("./config");
+
 const { messageCreator } = require("./utils/message");
 const { sendWebhook } = require("./utils/webhook");
+
+
+if (!config.username){
+	console.log("Username required!");
+	return
+}
+if (!config.password){
+	console.log("Password required!");
+	return
+}
+if (!config.authType){
+	console.log("AuthType required!");
+	return
+}
+if (!config.webhookURL){
+	console.log("Webhook URL required!");
+	return
+}
 
 const options = {
 	host: "play.mineclub.com",
@@ -17,8 +51,8 @@ const bot = mineflayer.createBot(options);
 // Webhook Settings
 
 var webhookInfo = {
-	UUID,
-	USERNAME
+	UUID: "",
+	USERNAME: ""
 };
 
 // Session Stats Tracking
@@ -140,9 +174,10 @@ bot.on("kicked", async (reason, loggedIn) => {
 	if (loggedIn) {
 		stats.endTime = Date.now();
 		let msg = messageCreator("exit", {stats})
-		await sendWebhook("kick", {webhookInfo, reason, msg});
+		await send
+		Webhook("kick", {webhookInfo, reason, msg});
 	}
-	console.log(reason);
+	console.log(JSON.parse(reason).text);
 	kicked = true;
 });
 
