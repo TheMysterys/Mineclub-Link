@@ -102,7 +102,7 @@ bot.on("messagestr", async (message, messagePosition, jsonMsg) => {
 			if (season != stats.season) {
 				stats.season = season;
 			}
-			stats.totalTokensEarnt += Number.parseInt(msg.replace(/[^0-9]+/g, ""));
+			stats.totalTokensEarnt += Number.parseInt(message.replace(/[^0-9]+/g, ""));
 			stats.tokenTimesEarnt++;
 			if (config.tokenAlerts.active) {
 				msg = messageCreator("token", {amount, season})
