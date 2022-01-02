@@ -6,12 +6,10 @@ try {
 	config = require("./config");
 	const EXAMPLE_CONFIG = require("./example-config");
 	if (config.configVersion != EXAMPLE_CONFIG.configVersion) {
-		configUpdater();
-		process.exit();
+		return configUpdater();
 	}
 } catch (err) {
-	configUpdater();
-	process.exit();
+	return configUpdater();
 }
 
 const mineflayer = require("mineflayer");
@@ -86,7 +84,7 @@ bot.once("spawn", async () => {
 	bot.acceptResourcePack();
 	webhookInfo.UUID = bot.player.uuid;
 	webhookInfo.USERNAME = bot.username;
-	await await sendWebhook("join", { webhookInfo });
+	await sendWebhook("join", { webhookInfo });
 });
 
 // Detect System Messages
