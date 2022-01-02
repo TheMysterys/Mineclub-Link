@@ -26,7 +26,7 @@ function messageCreator(type, args) {
 		}
 	} else if (type == "message") {
 		msg = args.message;
-		for (i of msg.match(/[\W]/g)) {
+		for (let i of msg.match(/[\W]/g)) {
 			if (emojiConvert(i)) {
 				msg = msg.replace(i, emojiConvert(i));
 			}

@@ -15,7 +15,7 @@ async function configUpdater() {
 			console.log("### New Update to config file. Updating it! ###");
 
 			// Cycle through options
-			for (option in EXAMPLE_CONFIG) {
+			for (let option in EXAMPLE_CONFIG) {
 				if (option != "configVersion") {
 					if (CURRENT_CONFIG[option]) {
 						EXAMPLE_CONFIG[option] = CURRENT_CONFIG[option];
@@ -24,11 +24,14 @@ async function configUpdater() {
 			}
 
 			// Format JSON (and remove "" around var names)
-			let json = JSON.stringify(EXAMPLE_CONFIG, null, 2);
+			let json = JSON.stringify(EXAMPLE_CONFIG, null, "\t");
 			json = json.replace(/"([^"]+)":/g, "$1:");
+			json = json.replace(/\n/g,"\r\n");
+			
+			// Write the updated file
 			await fs.writeFileSync(
 				"./config.js",
-				`module.exports = ${json}`,
+				`module.exports = ${json};`,
 				function (err) {
 					if (err) return console.log(err);
 				}
@@ -41,9 +44,8 @@ async function configUpdater() {
 			});
 		}
 	} catch (err) {
-		console.log(err)
+		console.log(err);
 	}
 }
 
-
-module.exports = { configUpdater }
+module.exports = { configUpdater };
