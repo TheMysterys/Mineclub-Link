@@ -4,7 +4,10 @@
   "description": "A AFK bot for Mineclub",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node main.js",
+    "build": "npm install && npm run lintnofix",
+    "lint": "eslint . --ext .js,.jsx --fix",
+    "lintnofix": "eslint . --ext .js,.jsx"
   },
   "keywords": [],
   "author": "TheMysterys",
@@ -13,5 +16,8 @@
     "centra": "^2.5.0",
     "format-duration": "^1.4.0",
     "mineflayer": "github:PrismarineJS/mineflayer#pull/2217/head"
+  },
+  "devDependencies": {
+    "eslint": "^8.6.0"
   }
 }
