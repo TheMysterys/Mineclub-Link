@@ -5,13 +5,13 @@ var config;
 try {
 	config = require("./config");
 	const EXAMPLE_CONFIG = require("./example-config");
-	if (config.configVersion != EXAMPLE_CONFIG.configVersion){
-		configUpdater()
-		process.exit()
+	if (config.configVersion != EXAMPLE_CONFIG.configVersion) {
+		configUpdater();
+		process.exit();
 	}
-}catch(err){
+} catch (err) {
 	configUpdater();
-	process.exit()
+	process.exit();
 }
 
 const mineflayer = require("mineflayer");
@@ -19,25 +19,25 @@ const mineflayer = require("mineflayer");
 const { messageCreator } = require("./utils/message");
 const { sendWebhook } = require("./utils/webhook");
 
-
-if (!config.username){
+// Core config checks
+if (!config.username) {
 	console.log("Username required!");
-	return
+	return;
 }
-if (!config.password){
+if (!config.password) {
 	console.log("Password required!");
-	return
+	return;
 }
-if (!config.authType){
+if (!config.authType) {
 	console.log("AuthType required!");
-	return
+	return;
 }
-if (!config.webhookURL){
+if (!config.webhookURL) {
 	console.log("Webhook URL required!");
-	return
+	return;
 }
 
-const options = {
+const OPTIONS = {
 	host: "play.mineclub.com",
 	username: config.username,
 	password: config.password,
@@ -45,14 +45,12 @@ const options = {
 	version: config.version,
 	brand: "Mineclub-Link", // Please don't change ♥
 };
-
-const bot = mineflayer.createBot(options);
+const bot = mineflayer.createBot(OPTIONS);
 
 // Webhook Settings
-
 var webhookInfo = {
 	UUID: "",
-	USERNAME: ""
+	USERNAME: "",
 };
 
 // Session Stats Tracking
@@ -68,11 +66,10 @@ var stats = {
 
 	// Configurable stats (Can be hidden from disconnect screen)
 	goodnights: 0,
-
-}
+};
 
 // Clears stats on join
-function resetStats(){
+function resetStats() {
 	stats.season = "";
 	stats.totalGems = 0;
 	stats.totalTokensEarnt = 0;
@@ -89,24 +86,27 @@ bot.once("spawn", async () => {
 	bot.acceptResourcePack();
 	webhookInfo.UUID = bot.player.uuid;
 	webhookInfo.USERNAME = bot.username;
-	await await sendWebhook("join", {webhookInfo});
+	await await sendWebhook("join", { webhookInfo });
 });
 
 // Detect System Messages
-bot.on("messagestr", async (message, messagePosition, jsonMsg) => {
+bot.on("messagestr", async (message, messagePosition) => {
 	if (messagePosition == "system") {
 		// Token earning detection
 		if (message.match(/[\W]* You won ([0-9]) (\w*) Token[s]?!/g) != null) {
-			let amount = Number.parseInt(message.replace(/[^0-9]+/, "")) 
-			let season = message.replace(/[\W]* You won ([0-9]) (\w*) Token[s]?!/g, "$2")
+			let amount = Number.parseInt(message.replace(/[^0-9]+/, ""));
+			let season = message.replace(
+				/[\W]* You won ([0-9]) (\w*) Token[s]?!/g,
+				"$2"
+			);
 			if (season != stats.season) {
 				stats.season = season;
 			}
-			stats.totalTokensEarnt += Number.parseInt(msg.replace(/[^0-9]+/g, ""));
+			stats.totalTokensEarnt += amount;
 			stats.tokenTimesEarnt++;
 			if (config.tokenAlerts.active) {
-				msg = messageCreator("token", {amount, season})
-				await sendWebhook("token", {msg, webhookInfo});
+				let msg = messageCreator("token", { amount, season });
+				await sendWebhook("token", { msg, webhookInfo });
 			}
 		}
 		// Token message detection
@@ -117,8 +117,8 @@ bot.on("messagestr", async (message, messagePosition, jsonMsg) => {
 		if (message.includes("阵")) {
 			stats.totalGems += 50;
 			if (config.gemAlerts.active) {
-				let msg = messageCreator("gems", {stats})
-				await sendWebhook("gems", {msg, webhookInfo });
+				let msg = messageCreator("gems", { stats });
+				await sendWebhook("gems", { msg, webhookInfo });
 			}
 		}
 	}
@@ -128,15 +128,21 @@ bot.on("messagestr", async (message, messagePosition, jsonMsg) => {
 			message.match(/[\W]+(\w+) -> ME: ([\w\W]+)/g) &&
 			config.dmAlerts.active
 		) {
-			msg = messageCreator("message", message.replace(/[\W]+(\w+) -> ME: ([\w\W]+)/g, "$2"));
-			username = message.replace(/[\W]+(\w+) -> ME: ([\w\W]+)/g, "$1");
-			await sendWebhook("dm", {msg, username, webhookInfo });
+			let msg = messageCreator(
+				"message",
+				message.replace(/[\W]+(\w+) -> ME: ([\w\W]+)/g, "$2")
+			);
+			let username = message.replace(
+				/[\W]+(\w+) -> ME: ([\w\W]+)/g,
+				"$1"
+			);
+			await sendWebhook("dm", { msg, username, webhookInfo });
 		}
 	}
 });
 
 // Detect Chat Messages
-bot.on("chat", async (username, message, translate, jsonMsg, matches) => {
+bot.on("chat", async (username, message) => {
 	if (username == bot.username) {
 		return;
 	}
@@ -145,8 +151,8 @@ bot.on("chat", async (username, message, translate, jsonMsg, matches) => {
 		(message.includes(bot.username) && config.mentionAlerts.personal) ||
 		(message.includes("@everyone") && config.mentionAlerts.everyone)
 	) {
-		let msg = messageCreator("message", {message})
-		await sendWebhook("mention", {msg, username, webhookInfo });
+		let msg = messageCreator("message", { message });
+		await sendWebhook("mention", { msg, username, webhookInfo });
 	}
 	// Goodnight detection
 	if (
@@ -163,49 +169,51 @@ bot.on("chat", async (username, message, translate, jsonMsg, matches) => {
 bot.on("windowOpen", async (window) => {
 	if (window.title.includes("庳")) {
 		bot.closeWindow(window.id);
-	}else if (window.title.includes("a")) {
+	} else if (window.title.includes("a")) {
 		bot.closeWindow(window.id);
 	}
 });
 
+// Detect being kicked from the server
 var kicked = false;
-
 bot.on("kicked", async (reason, loggedIn) => {
 	if (loggedIn) {
 		stats.endTime = Date.now();
-		let msg = messageCreator("exit", {stats})
-		await send
-		Webhook("kick", {webhookInfo, reason, msg});
+		let msg = messageCreator("exit", { stats });
+		await sendWebhook("kick", { webhookInfo, reason, msg });
 	}
 	console.log(JSON.parse(reason).text);
 	kicked = true;
 });
 
+// Detect disconnecting from the server
 bot.on("end", async () => {
 	if (kicked) {
 		return;
 	}
 	stats.endTime = Date.now();
-	let msg = messageCreator("exit", {stats})
-	await sendWebhook("disconnect", {webhookInfo, msg});
+	let msg = messageCreator("exit", { stats });
+	await sendWebhook("disconnect", { webhookInfo, msg });
 	console.log("Disconnected from server");
 });
 
+// Detect error with client
 bot.on("error", async (error) => {
 	if (error.code == "ECONNREFUSED") {
 		console.log("Could not connect!");
 	} else {
 		stats.endTime = Date.now();
-		let msg = messageCreator("exit", {stats})
-		await sendWebhook("crash", {webhookInfo, msg});
+		let msg = messageCreator("exit", { stats });
+		await sendWebhook("crash", { webhookInfo, msg });
 		console.error(error);
 	}
 });
 
+// Detect program stop
 process.on("SIGINT", async function () {
 	stats.endTime = Date.now();
-	let msg = messageCreator("exit", {stats})
-	await sendWebhook("disconnect", {webhookInfo, msg});
+	let msg = messageCreator("exit", { stats });
+	await sendWebhook("disconnect", { webhookInfo, msg });
 	console.log("Disconnected from server");
 	process.exit();
 });
