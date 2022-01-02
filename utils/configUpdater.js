@@ -3,7 +3,7 @@ const fs = require("fs");
 const EXAMPLE_CONFIG = require("../example-config");
 const CONFIG_PATH = "./config.js";
 
-async function configUpdater() {
+function configUpdater() {
 	try {
 		if (fs.existsSync(CONFIG_PATH)) {
 			const CURRENT_CONFIG = require("../config");
@@ -29,7 +29,7 @@ async function configUpdater() {
 			json = json.replace(/\n/g,"\r\n");
 			
 			// Write the updated file
-			await fs.writeFileSync(
+			fs.writeFile(
 				"./config.js",
 				`module.exports = ${json};`,
 				function (err) {
