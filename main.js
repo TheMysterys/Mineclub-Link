@@ -43,7 +43,7 @@ const OPTIONS = {
 	version: config.version,
 	brand: "Mineclub-Link", // Please don't change ♥
 };
-const bot = mineflayer.createBot(OPTIONS);
+const BOT = mineflayer.createBot(OPTIONS);
 
 // Webhook Settings
 var webhookInfo = {
@@ -77,18 +77,18 @@ function resetStats() {
 }
 
 // Detect Join
-bot.once("spawn", async () => {
+BOT.once("spawn", async () => {
 	stats.startTime = Date.now();
 	resetStats();
 	console.log("Connected!");
-	bot.acceptResourcePack();
-	webhookInfo.UUID = bot.player.uuid;
-	webhookInfo.USERNAME = bot.username;
+	BOT.acceptResourcePack();
+	webhookInfo.UUID = BOT.player.uuid;
+	webhookInfo.USERNAME = BOT.username;
 	await sendWebhook("join", { webhookInfo });
 });
 
 // Detect System Messages
-bot.on("messagestr", async (message, messagePosition) => {
+BOT.on("messagestr", async (message, messagePosition) => {
 	if (messagePosition == "system") {
 		// Token earning detection
 		if (message.match(/[\W]* You won ([0-9]) (\w*) Token[s]?!/g) != null) {
@@ -140,13 +140,13 @@ bot.on("messagestr", async (message, messagePosition) => {
 });
 
 // Detect Chat Messages
-bot.on("chat", async (username, message) => {
-	if (username == bot.username) {
+BOT.on("chat", async (username, message) => {
+	if (username == BOT.username) {
 		return;
 	}
 	// Mention detection
 	if (
-		(message.includes(bot.username) && config.mentionAlerts.personal) ||
+		(message.includes(BOT.username) && config.mentionAlerts.personal) ||
 		(message.includes("@everyone") && config.mentionAlerts.everyone)
 	) {
 		let msg = messageCreator("message", { message });
@@ -164,17 +164,17 @@ bot.on("chat", async (username, message) => {
 });
 
 // Close login window on join or close discord link window
-bot.on("windowOpen", async (window) => {
+BOT.on("windowOpen", async (window) => {
 	if (window.title.includes("庳")) {
-		bot.closeWindow(window.id);
+		BOT.closeWindow(window.id);
 	} else if (window.title.includes("a")) {
-		bot.closeWindow(window.id);
+		BOT.closeWindow(window.id);
 	}
 });
 
 // Detect being kicked from the server
 var kicked = false;
-bot.on("kicked", async (reason, loggedIn) => {
+BOT.on("kicked", async (reason, loggedIn) => {
 	if (loggedIn) {
 		stats.endTime = Date.now();
 		let msg = messageCreator("exit", { stats });
@@ -185,7 +185,7 @@ bot.on("kicked", async (reason, loggedIn) => {
 });
 
 // Detect disconnecting from the server
-bot.on("end", async () => {
+BOT.on("end", async () => {
 	if (kicked) {
 		return;
 	}
@@ -196,7 +196,7 @@ bot.on("end", async () => {
 });
 
 // Detect error with client
-bot.on("error", async (error) => {
+BOT.on("error", async (error) => {
 	if (error.code == "ECONNREFUSED") {
 		console.log("Could not connect!");
 	} else {
