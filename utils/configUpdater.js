@@ -15,32 +15,34 @@ function configUpdater() {
 			console.log("### New Update to config file. Updating it! ###");
 
 			// Cycle through options
-			for (let option in EXAMPLE_CONFIG) {
-				if (option != "configVersion") {
-					if (CURRENT_CONFIG[option]) {
-						EXAMPLE_CONFIG[option] = CURRENT_CONFIG[option];
-					}
+			for (const option in EXAMPLE_CONFIG) {
+				if (option != "configVersion" && CURRENT_CONFIG[option]) {
+					EXAMPLE_CONFIG[option] = CURRENT_CONFIG[option];
 				}
 			}
 
 			// Format JSON (and remove "" around var names)
 			let json = JSON.stringify(EXAMPLE_CONFIG, null, "\t");
 			json = json.replace(/"([^"]+)":/g, "$1:");
-			json = json.replace(/\n/g,"\r\n");
-			
+			json = json.replace(/\n/g, "\r\n");
+
 			// Write the updated file
 			fs.writeFile(
 				"./config.js",
 				`module.exports = ${json};`,
-				function (err) {
-					if (err) return console.log(err);
-				}
+				function(err) {
+					if (err) {
+						return console.log(err);
+					}
+				},
 			);
 		} else {
 			console.log("### No Config file found. Creating it! ###");
 
-			fs.copyFile("./example-config.js", "./config.js", function (err) {
-				if (err) return console.log(err);
+			fs.copyFile("./example-config.js", "./config.js", function(err) {
+				if (err) {
+					return console.log(err);
+				}
 			});
 		}
 	} catch (err) {

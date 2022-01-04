@@ -9,6 +9,7 @@ const tokenList = {
 	winter: "<a:wintertoken_gif:906586240592265216>",
 };
 
+
 const emojiList = {
 	// Gem emotes
 	gem100: "<:Gem_100:837390660952653844>",
@@ -21,27 +22,31 @@ const emojiList = {
 	// Ahhhhhh (This will take some time and I think some don't exist. Might have to create a asset server)
 };
 
+
 /**
  *
  * @param {String} input The character used by Mineclub resource pack
- * @returns {String} Discord emoji
+ * @return {String} Discord emoji
  */
 function emojiConvert(input) {
 	return emojiList[input];
 }
 
+
+/* eslint-disable no-magic-numbers */
 function gemEmoji(amount) {
 	if (amount < 1000) {
-		return emojiList["gem100"];
+		return emojiList.gem100;
 	} else if (amount < 10000) {
-		return emojiList["gem1k"];
+		return emojiList.gem1k;
 	} else if (amount < 100000) {
-		return emojiList["gem10k"];
+		return emojiList.gem10k;
 	} else if (amount < 1000000) {
-		return emojiList["gem100k"];
-	} else {
-		return emojiList["gemmil"];
+		return emojiList.gem100k;
 	}
+	return emojiList.gemmil;
 }
+/* eslint-enable no-magic-numbers */
+
 
 module.exports = { tokenList, emojiList, emojiConvert, gemEmoji };
