@@ -1,6 +1,6 @@
 # Mineclub Link
 Mineclub link is a AFK bot that links into a Discord webhook to provide you with information while it AFKs on Mineclub for you.  
-Join the support Discord to suggest features/ideas or if you need help with setting up. [Discord Link](mysterybots.com/discord)
+Join the support Discord to suggest features/ideas or if you need help with setting up. [Discord Link](https://mysterybots.com/discord)
 
 ## Running the bot
 To run the bot you need to have [nodejs](https://nodejs.org) installed. 
