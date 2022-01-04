@@ -4,13 +4,14 @@ const { tokenList, emojiList, emojiConvert, gemEmoji } = require("./emojis");
 
 function messageCreator(type, args) {
 	let msg;
-	if (type == "tokens") {
+	if (type == "token") {
 		msg = `Collected ${args.amount} ${args.season} ${
-			args.amount > 1 ? "tokens" : "token"
+			args.amount > 1
+				? "tokens"
+				: "token"
 		}. ${tokenList[args.season]}`;
 		if (config.tokenAlerts.showTotal) {
-			msg =
-				msg +
+			msg +=
 				`Session Total: ${args.stats.totalTokensEarnt.toLocaleString()} ${
 					tokenList[args.season]
 				}`;
@@ -18,17 +19,16 @@ function messageCreator(type, args) {
 	} else if (type == "gems") {
 		msg = `Earnt 50 gems ${emojiList["100Gems"]}`;
 		if (config.gemAlerts.showTotal) {
-			msg =
-				msg +
+			msg +=
 				`Session Total: ${args.stats.totalGems.toLocaleString()} ${
 					gemEmoji[args.totalGems]
 				}`;
 		}
 	} else if (type == "message") {
 		msg = args.message;
-		for (let i of msg.match(/[\W]/g)) {
-			if (emojiConvert(i)) {
-				msg = msg.replace(i, emojiConvert(i));
+		for (const emoji of msg.match(/[\W]/g)) {
+			if (emojiConvert(emoji)) {
+				msg = msg.replace(emoji, emojiConvert(emoji));
 			}
 		}
 		return msg;
@@ -40,20 +40,17 @@ function messageCreator(type, args) {
 			ratio = 0;
 		}
 		msg = [
-			`Session Time: ${formatDuration(
-				args.stats.endTime - args.stats.startTime
-			)}`,
+			`Session Time: ${formatDuration(args.stats.endTime - args.stats.startTime)}`,
 			`Tokens Ratio: \`${args.stats.tokenTimesEarnt} : ${args.stats.tokenMessages}\` (${ratio})`,
 			`Tokens Earnt: ${args.stats.totalTokensEarnt.toLocaleString()} ${
-				args.season ? args.season : ""
+				args.season
+					? args.season
+					: ""
 			}`,
-			`Total Gems Earnt: ${args.stats.totalGems.toLocaleString()} ${gemEmoji(
-				args.stats.totalGems
-			)}`,
+			`Total Gems Earnt: ${args.stats.totalGems.toLocaleString()} ${gemEmoji(args.stats.totalGems)}`,
 		].join("\n");
 		if (config.stats.goodnights) {
-			msg =
-				msg +
+			msg +=
 				`\nGoodbyes Sent: ${args.stats.goodnights.toLocaleString()}`;
 		}
 	}
