@@ -1,12 +1,12 @@
 const tokenList = {
-	christmas: "<a:christmastoken:916392876475289661>",
-	halloween: "<a:halloween_token_big:893946799872688168>",
-	fall: "<a:falltoken_gif:883785431538364467>",
-	spring: "", // Spring event doesn't have an emoji on the discord
+	Christmas: "<a:christmastoken:916392876475289661>",
+	Halloween: "<a:halloween_token_big:893946799872688168>",
+	Fall: "<a:falltoken_gif:883785431538364467>",
+	Spring: "", // Spring event doesn't have an emoji on the discord
 	// Might use the summer token if they don't add one by Spring
-	summer: "<a:summer_token_gif:876204768270364712>",
-	autumn: "<:autumntoken:883775113168834581>", // Only one that isn't a gif ...
-	winter: "<a:wintertoken_gif:906586240592265216>",
+	Summer: "<a:summer_token_gif:876204768270364712>",
+	Autumn: "<:autumntoken:883775113168834581>", // Only one that isn't a gif ...
+	Winter: "<a:wintertoken_gif:906586240592265216>",
 };
 
 

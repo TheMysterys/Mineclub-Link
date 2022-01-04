@@ -9,7 +9,7 @@ function messageCreator(type, args) {
 			args.amount > 1
 				? "tokens"
 				: "token"
-		}. ${tokenList[args.season]}`;
+		}. ${tokenList[args.season]}\n`;
 		if (config.tokenAlerts.showTotal) {
 			msg +=
 				`Session Total: ${args.stats.totalTokensEarnt.toLocaleString()} ${
@@ -17,7 +17,7 @@ function messageCreator(type, args) {
 				}`;
 		}
 	} else if (type == "gems") {
-		msg = `Earnt 50 gems ${emojiList["100Gems"]}`;
+		msg = `Earnt 50 gems ${emojiList["100Gems"]}\n`;
 		if (config.gemAlerts.showTotal) {
 			msg +=
 				`Session Total: ${args.stats.totalGems.toLocaleString()} ${
