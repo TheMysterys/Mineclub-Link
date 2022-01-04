@@ -46,8 +46,8 @@ function messageCreator(type, args) {
 			`Session Time: ${formatDuration(args.stats.endTime - args.stats.startTime)}`,
 			`Tokens Ratio: \`${args.stats.tokenTimesEarnt} : ${args.stats.tokenMessages}\` (${ratio})`,
 			`Tokens Earnt: ${args.stats.totalTokensEarnt.toLocaleString()} ${
-				args.season
-					? args.season
+				args.stats.season
+					? args.stats.season
 					: ""
 			}`,
 			`Total Gems Earnt: ${args.stats.totalGems.toLocaleString()} ${gemEmoji(args.stats.totalGems)}`,
