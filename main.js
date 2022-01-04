@@ -128,7 +128,7 @@ BOT.on("messagestr", async (message, messagePosition) => {
 		) {
 			let msg = messageCreator(
 				"message",
-				message.replace(/[\W]+(\w+) -> ME: ([\w\W]+)/g, "$2")
+				{"message":message.replace(/[\W]+(\w+) -> ME: ([\w\W]+)/g, "$2")}
 			);
 			let username = message.replace(
 				/[\W]+(\w+) -> ME: ([\w\W]+)/g,
