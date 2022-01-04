@@ -26,11 +26,14 @@ function messageCreator(type, args) {
 		}
 	} else if (type == "message") {
 		msg = args.message;
-		for (const emoji of msg.match(/[\W]/g)) {
-			if (emojiConvert(emoji)) {
-				msg = msg.replace(emoji, emojiConvert(emoji));
+		if(msg.match(/[\W]/g)){
+			for (const emoji of msg.match(/[\W]/g)) {
+				if (emojiConvert(emoji)) {
+					msg = msg.replace(emoji, emojiConvert(emoji));
+				}
 			}
 		}
+		
 		return msg;
 	} else if (type == "exit") {
 		let ratio = (
