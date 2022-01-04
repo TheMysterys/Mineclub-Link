@@ -103,7 +103,7 @@ BOT.on("messagestr", async (message, messagePosition) => {
 			stats.totalTokensEarnt += amount;
 			stats.tokenTimesEarnt++;
 			if (config.tokenAlerts.active) {
-				let msg = messageCreator("token", { amount, season });
+				let msg = messageCreator("token", { amount, season, stats });
 				await sendWebhook("token", { msg, webhookInfo });
 			}
 		}
