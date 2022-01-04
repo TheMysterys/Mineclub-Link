@@ -17,7 +17,7 @@ function messageCreator(type, args) {
 				}`;
 		}
 	} else if (type == "gems") {
-		msg = `Earnt 50 gems ${emojiList["100Gems"]}\n`;
+		msg = `Earnt 50 gems ${emojiList["gem100"]}\n`;
 		if (config.gemAlerts.showTotal) {
 			msg +=
 				`Session Total: ${args.stats.totalGems.toLocaleString()} ${
