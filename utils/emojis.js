@@ -9,9 +9,9 @@ const tokenList = {
 	Winter: "<a:wintertoken_gif:906586240592265216>",
 };
 
-// ##############################################################################################
-// # If you use this compiled emoji list. Please credit link back to here in your code and repo #
-// ##############################################################################################
+// ################################################################################################################
+// # If you use this compiled emoji list. Please credit Mineclub Link and link back to here in your code and repo #
+// ################################################################################################################
 const emojiList = {
 	// Gem emotes
 	gem_10k: "<:gem_10k:837390660705320993>",
