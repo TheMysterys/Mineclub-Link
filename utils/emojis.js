@@ -365,15 +365,15 @@ function emojiConvert(input) {
 /* eslint-disable no-magic-numbers */
 function gemEmoji(amount) {
 	if (amount < 1000) {
-		return emojiList.gem100;
+		return emojiList.Gem_100;
 	} else if (amount < 10000) {
-		return emojiList.gem1k;
+		return emojiList.gem_1k;
 	} else if (amount < 100000) {
-		return emojiList.gem10k;
+		return emojiList.gem_10k;
 	} else if (amount < 1000000) {
-		return emojiList.gem100k;
+		return emojiList.gem_100k;
 	}
-	return emojiList.gemmil;
+	return emojiList.gem_1m;
 }
 /* eslint-enable no-magic-numbers */
 
