@@ -173,7 +173,7 @@ BOT.on("windowOpen", async (window) => {
 });
 
 // Detect being kicked from the server
-var kicked = false;
+let kicked = false;
 BOT.on("kicked", async (reason, loggedIn) => {
 	if (loggedIn) {
 		stats.endTime = Date.now();
@@ -184,18 +184,10 @@ BOT.on("kicked", async (reason, loggedIn) => {
 	kicked = true;
 });
 
-// Detect disconnecting from the server
-BOT.on("end", async () => {
-	if (kicked) {
-		return;
-	}
-	stats.endTime = Date.now();
-	let msg = messageCreator("exit", { stats });
-	await sendWebhook("disconnect", { webhookInfo, msg });
-	console.log("Disconnected from server");
-});
+
 
 // Detect error with client
+let crashed = false;
 BOT.on("error", async (error) => {
 	if (error.code == "ECONNREFUSED") {
 		console.log("Could not connect!");
@@ -204,7 +196,19 @@ BOT.on("error", async (error) => {
 		let msg = messageCreator("exit", { stats });
 		await sendWebhook("crash", { webhookInfo, msg });
 		console.error(error);
+		crashed = true;
 	}
+});
+
+// Detect disconnecting from the server
+BOT.on("end", async () => {
+	if (kicked || crashed) {
+		return;
+	}
+	stats.endTime = Date.now();
+	let msg = messageCreator("exit", { stats });
+	await sendWebhook("disconnect", { webhookInfo, msg });
+	console.log("Disconnected from server");
 });
 
 // Detect program stop
