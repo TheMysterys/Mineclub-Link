@@ -47,7 +47,7 @@ function messageCreator(type, args) {
 			`Tokens Ratio: \`${args.stats.tokenTimesEarnt} : ${args.stats.tokenMessages}\` (${ratio})`,
 			`Tokens Earnt: ${args.stats.totalTokensEarnt.toLocaleString()} ${
 				args.stats.season
-					? args.stats.season
+					? tokenList[args.stats.season]
 					: ""
 			}`,
 			`Total Gems Earnt: ${args.stats.totalGems.toLocaleString()} ${gemEmoji(args.stats.totalGems)}`,
