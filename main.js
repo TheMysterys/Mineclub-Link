@@ -1,15 +1,14 @@
-const { configUpdater } = require("./utils/configUpdater");
-var config;
+const { settingsUpdater, getSettingsFileVersion } = require("./utils/settingsUpdater");
+let settings;
 
-// Check that config is up to date
+// Check that settings file is up to date
 try {
-	config = require("./config");
-	const EXAMPLE_CONFIG = require("./example-config");
-	if (config.configVersion != EXAMPLE_CONFIG.configVersion) {
-		return configUpdater();
+	settings = require("./settings");
+	if (settings.settingsFileVersion != getSettingsFileVersion()) {
+		return settingsUpdater();
 	}
 } catch (err) {
-	return configUpdater();
+	return settingsUpdater();
 }
 
 const mineflayer = require("mineflayer");
@@ -17,42 +16,42 @@ const mineflayer = require("mineflayer");
 const { messageCreator } = require("./utils/message");
 const { sendWebhook } = require("./utils/webhook");
 
-// Core config checks
-if (!config.username) {
+// Core settings checks
+if (!settings.username) {
 	console.log("Username required!");
 	return;
 }
-if (!config.password) {
+if (!settings.password) {
 	console.log("Password required!");
 	return;
 }
-if (!config.authType) {
+if (!settings.authType) {
 	console.log("AuthType required!");
 	return;
 }
-if (!config.webhookURL) {
+if (!settings.webhookURL) {
 	console.log("Webhook URL required!");
 	return;
 }
 
 const OPTIONS = {
 	host: "play.mineclub.com",
-	username: config.username,
-	password: config.password,
-	auth: config.authType,
-	version: config.version,
+	username: settings.username,
+	password: settings.password,
+	auth: settings.authType,
+	version: settings.version,
 	brand: "Mineclub-Link", // Please don't change ♥
 };
 const BOT = mineflayer.createBot(OPTIONS);
 
 // Webhook Settings
-var webhookInfo = {
+const webhookInfo = {
 	UUID: "",
 	USERNAME: "",
 };
 
 // Session Stats Tracking
-var stats = {
+const stats = {
 	// Core stats (Can't be removed from disconnect message)
 	startTime: 0,
 	endTime: 0,
@@ -62,7 +61,7 @@ var stats = {
 	totalGems: 0,
 	season: "",
 
-	// Configurable stats (Can be hidden from disconnect screen)
+	// Configurable stats (Can be hidden from disconnect screen in the settings file)
 	goodnights: 0,
 };
 
@@ -102,7 +101,7 @@ BOT.on("messagestr", async (message, messagePosition) => {
 			}
 			stats.totalTokensEarnt += amount;
 			stats.tokenTimesEarnt++;
-			if (config.tokenAlerts.active) {
+			if (settings.tokenAlerts.active) {
 				let msg = messageCreator("token", { amount, season, stats });
 				await sendWebhook("token", { msg, webhookInfo });
 			}
@@ -114,7 +113,7 @@ BOT.on("messagestr", async (message, messagePosition) => {
 		// Gem message detection
 		if (message.includes("阵")) {
 			stats.totalGems += 50;
-			if (config.gemAlerts.active) {
+			if (settings.gemAlerts.active) {
 				let msg = messageCreator("gems", { stats });
 				await sendWebhook("gems", { msg, webhookInfo });
 			}
@@ -124,7 +123,7 @@ BOT.on("messagestr", async (message, messagePosition) => {
 	if (messagePosition == "chat") {
 		if (
 			message.match(/[\W]+(\w+) -> ME: ([\w\W]+)/g) &&
-			config.dmAlerts.active
+			settings.dmAlerts.active
 		) {
 			let msg = messageCreator(
 				"message",
@@ -146,8 +145,8 @@ BOT.on("chat", async (username, message) => {
 	}
 	// Mention detection
 	if (
-		(message.includes(BOT.username) && config.mentionAlerts.personal) ||
-		(message.includes("@everyone") && config.mentionAlerts.everyone)
+		(message.includes(BOT.username) && settings.mentionAlerts.personal) ||
+		(message.includes("@everyone") && settings.mentionAlerts.everyone)
 	) {
 		let msg = messageCreator("message", { message });
 		await sendWebhook("mention", { msg, username, webhookInfo });

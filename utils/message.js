@@ -1,4 +1,4 @@
-const config = require("../config");
+const settings = require("../settings");
 const formatDuration = require("format-duration");
 const { tokenList, emojiList, emojiConvert, gemEmoji } = require("./emojis");
 
@@ -10,7 +10,7 @@ function messageCreator(type, args) {
 				? "tokens"
 				: "token"
 		}. ${tokenList[args.season]}\n`;
-		if (config.tokenAlerts.showTotal) {
+		if (settings.tokenAlerts.showTotal) {
 			msg +=
 				`Session Total: ${args.stats.totalTokensEarnt.toLocaleString()} ${
 					tokenList[args.season]
@@ -18,7 +18,7 @@ function messageCreator(type, args) {
 		}
 	} else if (type == "gems") {
 		msg = `Earnt 50 gems ${emojiList.gem100}\n`;
-		if (config.gemAlerts.showTotal) {
+		if (settings.gemAlerts.showTotal) {
 			msg +=
 				`Session Total: ${args.stats.totalGems.toLocaleString()} ${
 					gemEmoji[args.totalGems]
@@ -52,7 +52,7 @@ function messageCreator(type, args) {
 			}`,
 			`Total Gems Earnt: ${args.stats.totalGems.toLocaleString()} ${gemEmoji(args.stats.totalGems)}`,
 		].join("\n");
-		if (config.stats.goodnights) {
+		if (settings.stats.goodnights) {
 			msg +=
 				`\nGoodbyes Sent: ${args.stats.goodnights.toLocaleString()}`;
 		}

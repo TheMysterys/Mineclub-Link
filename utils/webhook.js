@@ -1,6 +1,6 @@
 const c = require("centra");
 
-const WEBHOOK_URL = require("../config").webhookURL;
+const WEBHOOK_URL = require("../settings").webhookURL;
 
 async function sendWebhook(type, args) {
 	if (type == "token") {
