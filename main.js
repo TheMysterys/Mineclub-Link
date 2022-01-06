@@ -132,7 +132,7 @@ BOT.on("messagestr", async (message, messagePosition) => {
 	if (messagePosition == "chat") {
 		if (
 			message.match(/[\W]+(\w+) -> ME: ([\w\W]+)/g) &&
-			settings.dmAlerts.active
+			settings.dmAlerts
 		) {
 			let msg = messageCreator("message", {
 				message: message.replace(/[\W]+(\w+) -> ME: ([\w\W]+)/g, "$2"),
