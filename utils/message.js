@@ -33,7 +33,6 @@ function messageCreator(type, args) {
 				}
 			}
 		}
-		
 		return msg;
 	} else if (type == "exit") {
 		let ratio = (
