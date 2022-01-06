@@ -30,7 +30,7 @@ async function sendWebhook(type, args) {
 						title: "Gems Earnt",
 						color: 0x00ccff,
 						description:
-							args.msg + "<:Gem_100:837390660952653844> ",
+							args.msg,
 					},
 				],
 			})
