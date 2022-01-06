@@ -104,10 +104,10 @@ BOT.on("messagestr", async (message, messagePosition) => {
 			}
 			stats.totalTokensEarnt += amount;
 			stats.tokenTimesEarnt++;
-			if (settings.tokenAlerts.active) {
+			if (settings.tokenAlerts.active == true) {
 				let msg = messageCreator("token", { amount, season, stats });
 				await sendWebhook("token", { msg, webhookInfo });
-				if (settings.logToConsole) {
+				if (settings.logToConsole == true) {
 					console.log(`Collected ${amount} ${season} tokens!`);
 				}
 			}
@@ -119,10 +119,10 @@ BOT.on("messagestr", async (message, messagePosition) => {
 		// Gem message detection
 		if (message.includes("阵")) {
 			stats.totalGems += 50;
-			if (settings.gemAlerts.active) {
+			if (settings.gemAlerts.active == true) {
 				let msg = messageCreator("gems", { stats });
 				await sendWebhook("gems", { msg, webhookInfo });
-				if (settings.logToConsole) {
+				if (settings.logToConsole == true) {
 					console.log("Earnt 50 gems!");
 				}
 			}
@@ -132,7 +132,7 @@ BOT.on("messagestr", async (message, messagePosition) => {
 	if (messagePosition == "chat") {
 		if (
 			message.match(/[\W]+(\w+) -> ME: ([\w\W]+)/g) &&
-			settings.dmAlerts
+			settings.dmAlerts == true
 		) {
 			let msg = messageCreator("message", {
 				message: message.replace(/[\W]+(\w+) -> ME: ([\w\W]+)/g, "$2"),
@@ -142,7 +142,7 @@ BOT.on("messagestr", async (message, messagePosition) => {
 				"$1"
 			);
 			await sendWebhook("dm", { msg, username, webhookInfo });
-			if (settings.logToConsole) {
+			if (settings.logToConsole == true) {
 				console.log(`${username} -> ME: ${msg}`);
 			}
 		}
@@ -156,12 +156,12 @@ BOT.on("chat", async (username, message) => {
 	}
 	// Mention detection
 	if (
-		(message.includes(BOT.username) && settings.mentionAlerts.personal) ||
-		(message.includes("@everyone") && settings.mentionAlerts.everyone)
+		(message.includes(BOT.username) && settings.mentionAlerts.personal == true) ||
+		(message.includes("@everyone") && settings.mentionAlerts.everyone == true)
 	) {
 		let msg = messageCreator("message", { message });
 		await sendWebhook("mention", { msg, username, webhookInfo });
-		if (settings.logToConsole){
+		if (settings.logToConsole == true) {
 			console.log(`${username}: ${message}`);
 		}
 	}
