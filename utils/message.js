@@ -21,7 +21,7 @@ function messageCreator(type, args) {
 		if (settings.gemAlerts.showTotal) {
 			msg +=
 				`Session Total: ${args.stats.totalGems.toLocaleString()} ${
-					gemEmoji[args.stats.totalGems]
+					gemEmoji(args.stats.totalGems)
 				}`;
 		}
 	} else if (type == "message") {
