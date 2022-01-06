@@ -2,19 +2,10 @@
 Mineclub link is a AFK bot that links into a Discord webhook to provide you with information while it AFKs on Mineclub for you.  
 Join the support Discord to suggest features/ideas or if you need help with setting up. [Discord Link](https://mysterybots.com/discord)
 
-## Running the bot
-To run the bot you need to have [nodejs](https://nodejs.org) installed. 
-1. Run `npm i` to install dependencies
-2. Run `npm run start` or `node main.js` to run the program
-
-## How to configure
-Run the bot to get the latest config file (`config.js`. Existing settings will be transferred when file gets updated).  
-The main settings you will need to change are:
-- `username`: Change this to your email (or username if on a legacy account)
-- `password`: Account password. (Your password is never shared with me or any other people)
-- `authType`: This needs to be either "microsoft" or "mojang" depending on whether you have migrated your account or not
-- `webhookURL`: A url to a webhook in your Discord where you want logs to be sent. 
-
+## How to setup and run the bot
+To learn how to setup and run the bot, head over to our wiki and you can follow each of the steps provided.  
+If something doesn't make sense or you need some extra help, feel free to join the discord and someone will be willing to help you out.  
+https://github.com/TheMysterys/Mineclub-Link/wiki
 
 ## Contributing
 Please feel free to contribute to the bot by making pull requests.
