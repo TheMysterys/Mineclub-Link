@@ -17,11 +17,11 @@ function messageCreator(type, args) {
 				}`;
 		}
 	} else if (type == "gems") {
-		msg = `Earnt 50 gems ${emojiList.gem100}\n`;
+		msg = `Earnt 50 gems ${emojiList.Gem_100}\n`;
 		if (settings.gemAlerts.showTotal) {
 			msg +=
 				`Session Total: ${args.stats.totalGems.toLocaleString()} ${
-					gemEmoji[args.totalGems]
+					gemEmoji[args.stats.totalGems]
 				}`;
 		}
 	} else if (type == "message") {
