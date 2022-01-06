@@ -1,4 +1,7 @@
-const { settingsUpdater, getSettingsFileVersion } = require("./utils/settingsUpdater");
+const {
+	settingsUpdater,
+	getSettingsFileVersion,
+} = require("./utils/settingsUpdater");
 let settings;
 
 // Check that settings file is up to date
@@ -104,6 +107,9 @@ BOT.on("messagestr", async (message, messagePosition) => {
 			if (settings.tokenAlerts.active) {
 				let msg = messageCreator("token", { amount, season, stats });
 				await sendWebhook("token", { msg, webhookInfo });
+				if (settings.logToConsole) {
+					console.log(`Collected ${amount} ${season} tokens!`);
+				}
 			}
 		}
 		// Token message detection
@@ -116,6 +122,9 @@ BOT.on("messagestr", async (message, messagePosition) => {
 			if (settings.gemAlerts.active) {
 				let msg = messageCreator("gems", { stats });
 				await sendWebhook("gems", { msg, webhookInfo });
+				if (settings.logToConsole) {
+					console.log("Earnt 50 gems!");
+				}
 			}
 		}
 	}
@@ -125,15 +134,17 @@ BOT.on("messagestr", async (message, messagePosition) => {
 			message.match(/[\W]+(\w+) -> ME: ([\w\W]+)/g) &&
 			settings.dmAlerts.active
 		) {
-			let msg = messageCreator(
-				"message",
-				{"message":message.replace(/[\W]+(\w+) -> ME: ([\w\W]+)/g, "$2")}
-			);
+			let msg = messageCreator("message", {
+				message: message.replace(/[\W]+(\w+) -> ME: ([\w\W]+)/g, "$2"),
+			});
 			let username = message.replace(
 				/[\W]+(\w+) -> ME: ([\w\W]+)/g,
 				"$1"
 			);
 			await sendWebhook("dm", { msg, username, webhookInfo });
+			if (settings.logToConsole) {
+				console.log(`${username} -> ME: ${msg}`);
+			}
 		}
 	}
 });
@@ -150,6 +161,9 @@ BOT.on("chat", async (username, message) => {
 	) {
 		let msg = messageCreator("message", { message });
 		await sendWebhook("mention", { msg, username, webhookInfo });
+		if (settings.logToConsole){
+			console.log(`${username}: ${message}`);
+		}
 	}
 	// Goodnight detection
 	if (
@@ -182,8 +196,6 @@ BOT.on("kicked", async (reason, loggedIn) => {
 	console.log(JSON.parse(reason).text);
 	kicked = true;
 });
-
-
 
 // Detect error with client
 let crashed = false;
