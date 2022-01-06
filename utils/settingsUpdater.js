@@ -1,6 +1,8 @@
 const fs = require("fs");
 
 const SETTINGS_PATH = "./settings.js";
+const SETTINGS_EXPLAINED_MESSAGE =
+	"Check https://github.com/TheMysterys/Mineclub-Link/wiki/Settings-Explained to learn about each setting";
 
 const DEFAULT_SETTINGS = {
 	settingsFileVersion: "0.1",
@@ -36,21 +38,27 @@ const DEFAULT_SETTINGS = {
 	},
 };
 
-
 function settingsUpdater() {
 	try {
 		if (fs.existsSync(SETTINGS_PATH)) {
 			const CURRENT_SETTINGS = require("../settings");
 
-			if (CURRENT_SETTINGS.settingsFileVersion == DEFAULT_SETTINGS.settingsFileVersion) {
+			if (
+				CURRENT_SETTINGS.settingsFileVersion ==
+				DEFAULT_SETTINGS.settingsFileVersion
+			) {
 				return;
 			}
 
 			console.log("### New Update to settings file. Updating it! ###");
+			console.log(`### ${SETTINGS_EXPLAINED_MESSAGE} ###`);
 
 			// Cycle through options
 			for (const option in DEFAULT_SETTINGS) {
-				if (option != "settingsFileVersion" && CURRENT_SETTINGS[option]) {
+				if (
+					option != "settingsFileVersion" &&
+					CURRENT_SETTINGS[option]
+				) {
 					DEFAULT_SETTINGS[option] = CURRENT_SETTINGS[option];
 				}
 			}
@@ -63,15 +71,16 @@ function settingsUpdater() {
 			// Write the updated file
 			fs.writeFile(
 				"./settings.js",
-				`module.exports = ${json};`,
-				function(err) {
+				`// ### ${SETTINGS_EXPLAINED_MESSAGE} ###\r\nmodule.exports = ${json};`,
+				function (err) {
 					if (err) {
 						return console.log(err);
 					}
-				},
+				}
 			);
 		} else {
 			console.log("### No settings file found. Creating it! ###");
+			console.log(`### ${SETTINGS_EXPLAINED_MESSAGE} ###`);
 
 			// Format JSON (and remove "" around var names)
 			let json = JSON.stringify(DEFAULT_SETTINGS, null, "\t");
@@ -81,12 +90,12 @@ function settingsUpdater() {
 			// Write the updated file
 			fs.writeFile(
 				"./settings.js",
-				`module.exports = ${json};`,
-				function(err) {
+				`// ### ${SETTINGS_EXPLAINED_MESSAGE} ###\r\nmodule.exports = ${json};`,
+				function (err) {
 					if (err) {
 						return console.log(err);
 					}
-				},
+				}
 			);
 		}
 	} catch (err) {
@@ -94,7 +103,7 @@ function settingsUpdater() {
 	}
 }
 
-function getSettingsFileVersion(){
+function getSettingsFileVersion() {
 	return DEFAULT_SETTINGS.settingsFileVersion;
 }
 
