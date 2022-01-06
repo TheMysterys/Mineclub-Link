@@ -361,8 +361,6 @@ function emojiConvert(input) {
 	return emojiList[input];
 }
 
-
-/* eslint-disable no-magic-numbers */
 function gemEmoji(amount) {
 	if (amount < 1000) {
 		return emojiList.Gem_100;
@@ -375,7 +373,5 @@ function gemEmoji(amount) {
 	}
 	return emojiList.gem_1m;
 }
-/* eslint-enable no-magic-numbers */
-
 
 module.exports = { tokenList, emojiList, emojiConvert, gemEmoji };
