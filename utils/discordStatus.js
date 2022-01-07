@@ -1,14 +1,16 @@
-const client = new (require("easy-presence").EasyPresence)(
-	"928762340961304597"
-);
+const { Client } = require("discord-rpc");
+let client = new Client({
+	transport: "ipc",
+});
 
-function startStatus(username) {
-	setInterval(() => {
-		client.setActivity({
+async function updateStatus(username, startTime) {
+	return client.request("SET_ACTIVITY", {
+		pid: process.pid,
+		activity: {
 			details: "Username:",
 			state: username,
 			assets: {
-				large_image: "mineclub-logo"
+				large_image: "mineclub-link",
 			},
 			buttons: [
 				{
@@ -16,9 +18,32 @@ function startStatus(username) {
 					url: "https://mineclub.mysterybots.com",
 				},
 			],
-			timestamps: { start: new Date() },
-		});
-	}, 1000);
+			timestamps: {
+				start: startTime,
+			},
+		},
+	});
 }
+
+function startStatus(username, startTime) {
+	client = new Client({
+		transport: "ipc",
+	});
+	client.on("ready", async () => {
+		setInterval(async () => {
+			await updateStatus(username, startTime);
+		}, 5000);
+	});
+	client.login({ clientId: "928762340961304597" });
+}
+
+process.on("unhandledRejection", (err) => {
+	if (err.message === "Could not connect") {
+		console.log(
+			"### Unable to start Discord Status. (Mineclub Link will continue to run) ###"
+		);
+		return;
+	}
+});
 
 module.exports = { startStatus };
