@@ -12,8 +12,7 @@ async function sendWebhook(type, args) {
 					{
 						title: "Tokens Earnt",
 						color: 0x42db11,
-						description:
-							args.msg,
+						description: args.msg,
 					},
 				],
 			})
@@ -29,8 +28,7 @@ async function sendWebhook(type, args) {
 					{
 						title: "Gems Earnt",
 						color: 0x00ccff,
-						description:
-							args.msg,
+						description: args.msg,
 					},
 				],
 			})
@@ -75,6 +73,39 @@ async function sendWebhook(type, args) {
 			.send();
 		return;
 	}
+	if (type == "marketSold") {
+		await c(WEBHOOK_URL, "POST")
+			.body({
+				username: `Mineclub Link [${args.webhookInfo.USERNAME}]`,
+				avatar_url: `https://crafatar.com/renders/head/${args.webhookInfo.UUID}?overlay`,
+				embeds: [
+					{
+						title: "Market Sold",
+						color: 0x42f56f,
+						description: args.msg,
+					},
+				],
+			})
+			.send();
+		return;
+	}
+	if (type == "marketOutbid") {
+		await c(WEBHOOK_URL, "POST")
+			.body({
+				content: args.ping,
+				username: `Mineclub Link [${args.webhookInfo.USERNAME}]`,
+				avatar_url: `https://crafatar.com/renders/head/${args.webhookInfo.UUID}?overlay`,
+				embeds: [
+					{
+						title: "Market Outbid",
+						color: 0xf75c5c,
+						description: args.msg,
+					},
+				],
+			})
+			.send();
+		return;
+	}
 	if (type == "join") {
 		await c(WEBHOOK_URL, "POST")
 			.body({
@@ -105,7 +136,7 @@ async function sendWebhook(type, args) {
 						color: 0xff0000,
 						description: [
 							`Kick reason: ${args.reason}`,
-							args.msg
+							args.msg,
 						].join("\n"),
 					},
 				],
@@ -148,7 +179,7 @@ async function sendWebhook(type, args) {
 						color: 0xff0000,
 						description: [
 							"Check console for more information",
-							args.msg
+							args.msg,
 						].join("\n"),
 					},
 				],
