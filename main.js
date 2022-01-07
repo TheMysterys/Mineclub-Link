@@ -18,6 +18,8 @@ const mineflayer = require("mineflayer");
 
 const { messageCreator } = require("./utils/message");
 const { sendWebhook } = require("./utils/webhook");
+const { startStatus } = require("./utils/discordStatus");
+const { username } = require("./settings");
 
 // Core settings checks
 if (!settings.username) {
@@ -58,11 +60,15 @@ const stats = {
 	// Core stats (Can't be removed from disconnect message)
 	startTime: 0,
 	endTime: 0,
+	// Tokens
 	tokenMessages: 0,
 	tokenTimesEarnt: 0,
 	totalTokensEarnt: 0,
-	totalGems: 0,
 	season: "",
+	// Gems
+	activityGems: 0,
+	marketGems: 0,
+	totalGems: 0,
 
 	// Configurable stats (Can be hidden from disconnect screen in the settings file)
 	goodnights: 0,
@@ -80,12 +86,19 @@ function resetStats() {
 
 // Detect Join
 BOT.once("spawn", async () => {
+	// Set stats to 0 and set start time
 	stats.startTime = Date.now();
 	resetStats();
+	// State that bot has connected
 	console.log("Connected!");
+	// Load resource pack and set webhook info
 	BOT.acceptResourcePack();
 	webhookInfo.UUID = BOT.player.uuid;
 	webhookInfo.USERNAME = BOT.username;
+	// Manage Discord status
+	if (settings.discordStatus == true) {
+		startStatus(BOT.username);
+	}
 	await sendWebhook("join", { webhookInfo });
 });
 
@@ -118,6 +131,7 @@ BOT.on("messagestr", async (message, messagePosition) => {
 		}
 		// Gem message detection
 		if (message.includes("阵")) {
+			stats.activityGems += 50;
 			stats.totalGems += 50;
 			if (settings.gemAlerts.active == true) {
 				let msg = messageCreator("gems", { stats });
@@ -128,8 +142,8 @@ BOT.on("messagestr", async (message, messagePosition) => {
 			}
 		}
 	}
-	// DM Detection
 	if (messagePosition == "chat") {
+		// DM Detection
 		if (
 			message.match(/[\W]+(\w+) -> ME: ([\w\W]+)/g) &&
 			settings.dmAlerts == true
@@ -146,6 +160,59 @@ BOT.on("messagestr", async (message, messagePosition) => {
 				console.log(`${username} -> ME: ${msg}`);
 			}
 		}
+		// Market sold detection
+		if (message.includes("這")) {
+			const AMOUNT_REGEX = RegExp(
+				/[\W]+([0-9,]+)[\W]+is ready to be collected/g
+			);
+			const BUYER_REGEX = RegExp(/[\W]+Purchase made by: [\W]+([\w]+)/g);
+			const AMOUNT_RESULT = AMOUNT_REGEX.exec(message);
+			const BUYER_RESULT = BUYER_REGEX.exec(message);
+			console.log(AMOUNT_RESULT);
+			const amount = Number.parseInt(AMOUNT_RESULT[1].replace(",", ""));
+			const buyer = BUYER_RESULT[1];
+
+			stats.marketGems += amount;
+			stats.totalGems += amount;
+			if (settings.marketAlerts.sellAlert == true) {
+				let msg = messageCreator("marketSold", {
+					amount,
+					buyer,
+					stats,
+				});
+				await sendWebhook("marketSold", { msg, webhookInfo });
+				if (settings.logToConsole == true) {
+					console.log(`${username} brought your item for ${amount}`);
+				}
+			}
+		}
+		// Market outbid detection
+		if (message.includes("ꌄ[Market] You have been outbid by")) {
+			let username = message.replace(
+				/[\W]+\[Market\] You have been outbid by [\W]+([\w]+) ([0-9,]+)[\W]+/g,
+				"$1"
+			);
+			let amount = Number.parseInt(
+				message
+					.replace(
+						/[\W]+\[Market\] You have been outbid by [\W]+([\w]+) ([0-9,]+)[\W]+/g,
+						"$2"
+					)
+					.replace(",", "")
+			);
+			const outbidSettings = settings.marketAlerts.outbidAlert;
+			if (outbidSettings.active == true) {
+				let msg = messageCreator("marketOutbid", { amount, username });
+				if (outbidSettings.ping == true && outbidSettings.pingUserID)				{
+					await sendWebhook("marketOutbid", { msg, ping: `<@${outbidSettings.pingUserID}>`, webhookInfo });
+				}else {
+					await sendWebhook("marketOutbid", { msg, webhookInfo });
+				}
+				if (settings.logToConsole == true){
+					console.log(`Outbid by: ${username}. New price ${amount}`);
+				}
+			}
+		}
 	}
 });
 
@@ -156,8 +223,10 @@ BOT.on("chat", async (username, message) => {
 	}
 	// Mention detection
 	if (
-		(message.includes(BOT.username) && settings.mentionAlerts.personal == true) ||
-		(message.includes("@everyone") && settings.mentionAlerts.everyone == true)
+		(message.includes(BOT.username) &&
+			settings.mentionAlerts.personal == true) ||
+		(message.includes("@everyone") &&
+			settings.mentionAlerts.everyone == true)
 	) {
 		let msg = messageCreator("message", { message });
 		await sendWebhook("mention", { msg, username, webhookInfo });
