@@ -58,8 +58,8 @@ function messageCreator(type, args) {
 			`Tokens Earnt: ${args.stats.totalTokensEarnt.toLocaleString()} ${
 				args.stats.season ? tokenList[args.stats.season] : ""
 			}`,
-			`Activity Gems Earnt: ${args.activityGems.toLocaleString()} ${gemEmoji(args.activityGems)}`,
-			`Market Gems Earnt: ${args.marketGems.toLocaleString()} ${gemEmoji(args.marketGems)}`,
+			`Activity Gems Earnt: ${args.stats.activityGems.toLocaleString()} ${gemEmoji(args.stats.activityGems)}`,
+			`Market Gems Earnt: ${args.stats.marketGems.toLocaleString()} ${gemEmoji(args.stats.marketGems)}`,
 			`Total Gems Earnt: ${args.stats.totalGems.toLocaleString()} ${gemEmoji(
 				args.stats.totalGems
 			)}`,
