@@ -5,12 +5,13 @@ const SETTINGS_EXPLAINED_MESSAGE =
 	"Check https://github.com/TheMysterys/Mineclub-Link/wiki/Settings-Explained to learn about each setting";
 
 const DEFAULT_SETTINGS = {
-	settingsFileVersion: "0.1",
+	settingsFileVersion: "0.3",
 	webhookURL: "",
 	authType: "microsoft",
 	username: "",
 	password: "",
 	version: "1.17.1",
+	discordStatus: true,
 	logToConsole: false,
 	tokenAlerts: {
 		active: true,
@@ -22,6 +23,7 @@ const DEFAULT_SETTINGS = {
 	},
 	marketAlerts: {
 		sellAlert: true,
+		showTotal: true,
 		outbidAlerts: {
 			active: true,
 			ping: true,
@@ -55,7 +57,22 @@ function settingsUpdater() {
 
 			// Cycle through options
 			for (const option in DEFAULT_SETTINGS) {
-				if (
+				if (typeof(DEFAULT_SETTINGS[option]) == "object" && CURRENT_SETTINGS[option]){
+					for (const subOption in DEFAULT_SETTINGS[option]){
+						if (typeof(DEFAULT_SETTINGS[option][subOption]) == "object" && CURRENT_SETTINGS[option][subOption]){
+							for (const subSubOption in DEFAULT_SETTINGS[option][subOption]){
+								if (CURRENT_SETTINGS[option][subOption][subSubOption]){
+									DEFAULT_SETTINGS[option][subOption][subSubOption] = CURRENT_SETTINGS[option][subOption][subSubOption];
+								}
+							}
+						}else {
+							if (CURRENT_SETTINGS[option][subOption]){
+								DEFAULT_SETTINGS[option][subOption] = CURRENT_SETTINGS[option][subOption];
+							}
+						}
+					}
+				}
+				else if (
 					option != "settingsFileVersion" &&
 					CURRENT_SETTINGS[option]
 				) {
