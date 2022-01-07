@@ -96,9 +96,9 @@ BOT.once("spawn", async () => {
 	webhookInfo.UUID = BOT.player.uuid;
 	webhookInfo.USERNAME = BOT.username;
 	// Manage Discord status (Currently Broken)
-	/* if (settings.discordStatus == true) {
-		startStatus(BOT.username);
-	} */
+	if (settings.discordStatus == true) {
+		startStatus(BOT.username, stats.startTime);
+	}
 	await sendWebhook("join", { webhookInfo });
 });
 
