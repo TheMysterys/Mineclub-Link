@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "centra": "^2.5.0",
+    "easy-presence": "^1.2.0-oops1",
     "format-duration": "^1.4.0",
     "mineflayer": "github:PrismarineJS/mineflayer#pull/2217/head"
   },
