@@ -292,10 +292,14 @@ BOT.on("end", async () => {
 });
 
 // Detect program stop
-process.on("SIGINT", async function () {
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
+
+
+async function shutdown() {
 	stats.endTime = Date.now();
 	let msg = messageCreator("exit", { stats });
 	await sendWebhook("disconnect", { webhookInfo, msg });
 	console.log("Disconnected from server");
 	process.exit();
-});
+}
