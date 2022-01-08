@@ -61,12 +61,12 @@ function settingsUpdater() {
 					for (const subOption in DEFAULT_SETTINGS[option]){
 						if (typeof(DEFAULT_SETTINGS[option][subOption]) == "object" && CURRENT_SETTINGS[option][subOption]){
 							for (const subSubOption in DEFAULT_SETTINGS[option][subOption]){
-								if (CURRENT_SETTINGS[option][subOption][subSubOption]){
+								if (subSubOption in CURRENT_SETTINGS[option][subOption]){
 									DEFAULT_SETTINGS[option][subOption][subSubOption] = CURRENT_SETTINGS[option][subOption][subSubOption];
 								}
 							}
 						}else {
-							if (CURRENT_SETTINGS[option][subOption]){
+							if (subOption in CURRENT_SETTINGS[option]){
 								DEFAULT_SETTINGS[option][subOption] = CURRENT_SETTINGS[option][subOption];
 							}
 						}
@@ -74,7 +74,7 @@ function settingsUpdater() {
 				}
 				else if (
 					option != "settingsFileVersion" &&
-					CURRENT_SETTINGS[option]
+					option in CURRENT_SETTINGS
 				) {
 					DEFAULT_SETTINGS[option] = CURRENT_SETTINGS[option];
 				}
