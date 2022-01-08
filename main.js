@@ -26,7 +26,7 @@ if (!settings.username) {
 	console.log("Username required!");
 	return;
 }
-if (!settings.password) {
+if (!settings.password && settings.authType != "microsoft") {
 	console.log("Password required!");
 	return;
 }
@@ -47,7 +47,12 @@ const OPTIONS = {
 	version: settings.version,
 	brand: "Mineclub-Link", // Please don't change ♥
 };
-const BOT = mineflayer.createBot(OPTIONS);
+
+let BOT = mineflayer.createBot(OPTIONS);
+
+function login(){
+	BOT = mineflayer.createBot(OPTIONS);
+}
 
 // Webhook Settings
 const webhookInfo = {
@@ -162,16 +167,10 @@ BOT.on("messagestr", async (message, messagePosition) => {
 		}
 		// Market sold detection
 		if (message.includes("這")) {
-			const AMOUNT_REGEX = RegExp(
-				/[\W]+([0-9,]+)[\W]+is ready to be collected/g
-			);
 			const BUYER_REGEX = RegExp(/[\W]+Purchase made by: [\W]+([\w]+)/g);
-			const AMOUNT_RESULT = AMOUNT_REGEX.exec(message);
 			const BUYER_RESULT = BUYER_REGEX.exec(message);
-			console.log(AMOUNT_RESULT);
-			const amount = Number.parseInt(AMOUNT_RESULT[1].replace(",", ""));
+			const amount = Number.parseInt(message.replace(/[^0-9]+/, ""));
 			const buyer = BUYER_RESULT[1];
-
 			stats.marketGems += amount;
 			stats.totalGems += amount;
 			if (settings.marketAlerts.sellAlert == true) {
@@ -187,28 +186,29 @@ BOT.on("messagestr", async (message, messagePosition) => {
 			}
 		}
 		// Market outbid detection
-		if (message.includes("ꌄ[Market] You have been outbid by")) {
+		if (
+			message.match(
+				/[\W]\[(?:Market|Housing)] You have been outbid by \W+(\w+) ([\d,]+)/
+			)
+		) {
 			let username = message.replace(
-				/[\W]+\[Market\] You have been outbid by [\W]+([\w]+) ([0-9,]+)[\W]+/g,
+				/[\W]\[(?:Market|Housing)] You have been outbid by \W+(\w+) ([\d,]+)/,
 				"$1"
 			);
-			let amount = Number.parseInt(
-				message
-					.replace(
-						/[\W]+\[Market\] You have been outbid by [\W]+([\w]+) ([0-9,]+)[\W]+/g,
-						"$2"
-					)
-					.replace(",", "")
-			);
+			let amount = Number.parseInt(message.replace(/[^0-9]+/, ""));
 			const outbidSettings = settings.marketAlerts.outbidAlert;
 			if (outbidSettings.active == true) {
 				let msg = messageCreator("marketOutbid", { amount, username });
-				if (outbidSettings.ping == true && outbidSettings.pingUserID)				{
-					await sendWebhook("marketOutbid", { msg, ping: `<@${outbidSettings.pingUserID}>`, webhookInfo });
-				}else {
+				if (outbidSettings.ping == true && outbidSettings.pingUserID) {
+					await sendWebhook("marketOutbid", {
+						msg,
+						ping: `<@${outbidSettings.pingUserID}>`,
+						webhookInfo,
+					});
+				} else {
 					await sendWebhook("marketOutbid", { msg, webhookInfo });
 				}
-				if (settings.logToConsole == true){
+				if (settings.logToConsole == true) {
 					console.log(`Outbid by: ${username}. New price ${amount}`);
 				}
 			}
@@ -289,6 +289,7 @@ BOT.on("end", async () => {
 	let msg = messageCreator("exit", { stats });
 	await sendWebhook("disconnect", { webhookInfo, msg });
 	console.log("Disconnected from server");
+	login(); //Auto reconnect
 });
 
 // Detect program stop
