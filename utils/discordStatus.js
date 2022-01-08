@@ -40,7 +40,7 @@ function startStatus(username, startTime) {
 process.on("unhandledRejection", (err) => {
 	if (err.message === "Could not connect") {
 		console.log(
-			"### Unable to start Discord Status. (Mineclub Link will continue to run) ###"
+			"### Unable to start Discord Status. Make sure Discord is open for this to run (Mineclub Link will continue to run, but Discord status has been disabled) ###"
 		);
 		return;
 	}
