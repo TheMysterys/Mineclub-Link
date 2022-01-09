@@ -44,20 +44,16 @@ function messageCreator(type, args) {
 			`Outbid by: ${args.username}. New price ${args.amount} ${gemEmoji(args.amount)}`
 		].join("\n");
 	} else if (type == "exit") {
-		let ratio = (
-			args.stats.tokenTimesEarnt / args.stats.tokenMessages
-		).toFixed(3);
-		if (isNaN(ratio)) {
-			ratio = 0;
-		}
 		msg = [
 			`Session Time: ${formatDuration(
 				args.stats.endTime - args.stats.startTime
 			)}`,
-			`Tokens Ratio: \`${args.stats.tokenTimesEarnt} : ${args.stats.tokenMessages}\` (${ratio})`,
+			"**\nToken Stats**",
+			`Tokens Ratio: \`${args.stats.tokenTimesEarnt} : ${args.stats.tokenMessages}\``,
 			`Tokens Earnt: ${args.stats.totalTokensEarnt.toLocaleString()} ${
 				args.stats.season ? tokenList[args.stats.season] : ""
 			}`,
+			"**\nGem Stats**",
 			`Activity Gems Earnt: ${args.stats.activityGems.toLocaleString()} ${gemEmoji(args.stats.activityGems)}`,
 			`Market Gems Earnt: ${args.stats.marketGems.toLocaleString()} ${gemEmoji(args.stats.marketGems)}`,
 			`Total Gems Earnt: ${args.stats.totalGems.toLocaleString()} ${gemEmoji(
@@ -65,6 +61,9 @@ function messageCreator(type, args) {
 			)}`,
 		].join("\n");
 		if (settings.stats.goodnights) {
+			if (!msg.includes("**Custom Stats**")){
+				msg += "\n\n**Custom Stats**";
+			}
 			msg += `\nGoodbyes Sent: ${args.stats.goodnights.toLocaleString()}`;
 		}
 	}
