@@ -24,6 +24,12 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-var": "error",
+        "yoda": "error",
+        "dot-notation": "error",
+        "no-trailing-spaces": "error",
+        "no-mixed-spaces-and-tabs": "error",
+        "prefer-const": "error"
     }
 }
