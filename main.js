@@ -20,6 +20,7 @@ const { messageCreator } = require("./utils/message");
 const { sendWebhook } = require("./utils/webhook");
 const { startStatus } = require("./utils/discordStatus");
 const { username } = require("./settings");
+const { isEveryonePing } = require("./utils/checks");
 
 // Core settings checks
 if (!settings.username) {
@@ -251,7 +252,7 @@ function bindEvents(BOT) {
 		if (
 			(message.includes(BOT.username) &&
 				settings.mentionAlerts.personal == true) ||
-			(message.includes("@everyone") &&
+			(isEveryonePing(message) &&
 				settings.mentionAlerts.everyone == true)
 		) {
 			const MSG = messageCreator("message", { message });
@@ -281,7 +282,6 @@ function bindEvents(BOT) {
 	});
 
 	// Detect being kicked from the server
-	let kicked = false;
 	BOT.on("kicked", async (reason, loggedIn) => {
 		if (loggedIn) {
 			stats.endTime = Date.now();
@@ -289,11 +289,10 @@ function bindEvents(BOT) {
 			await sendWebhook("kick", { webhookInfo, reason, msg: MSG });
 		}
 		console.log(JSON.parse(reason).text);
-		kicked = true;
+		process.exit();
 	});
 
 	// Detect error with client
-	let crashed = false;
 	BOT.on("error", async (error) => {
 		if (error.code == "ECONNREFUSED") {
 			return console.log("Could not connect!");
@@ -307,15 +306,12 @@ function bindEvents(BOT) {
 			const MSG = messageCreator("exit", { stats });
 			await sendWebhook("crash", { webhookInfo, msg: MSG });
 			console.error(error);
-			crashed = true;
+			process.exit();
 		}
 	});
 
 	// Detect disconnecting from the server
 	BOT.on("end", async () => {
-		if (kicked || crashed) {
-			return;
-		}
 		stats.endTime = Date.now();
 		const MSG = messageCreator("exit", { stats });
 		await sendWebhook("disconnect", { webhookInfo, msg: MSG });
@@ -326,11 +322,14 @@ function bindEvents(BOT) {
 	});
 
 	// Detect program stop
-	process.on("SIGINT", async function () {
+	process.on("SIGINT", shutdown());
+	process.on("SIGTERM", shutdown());
+
+	async function shutdown(){
 		stats.endTime = Date.now();
 		const MSG = messageCreator("exit", { stats });
 		await sendWebhook("disconnect", { webhookInfo, msg: MSG });
 		console.log("Disconnected from server");
 		process.exit();
-	});
+	}
 }
