@@ -322,8 +322,8 @@ function bindEvents(BOT) {
 	});
 
 	// Detect program stop
-	process.on("SIGINT", shutdown());
-	process.on("SIGTERM", shutdown());
+	process.on("SIGINT", () => shutdown());
+	process.on("SIGTERM", () => shutdown());
 
 	async function shutdown(){
 		stats.endTime = Date.now();
