@@ -49,9 +49,6 @@ const OPTIONS = {
 	brand: "Mineclub-Link", // Please don't change ♥
 };
 
-const BOT = mineflayer.createBot(OPTIONS);
-bindEvents(BOT);
-
 // Webhook Settings
 const webhookInfo = {
 	UUID: "",
@@ -79,15 +76,27 @@ const stats = {
 
 // Clears stats on join
 function resetStats() {
-	stats.season = "";
-	stats.totalGems = 0;
-	stats.totalTokensEarnt = 0;
-	stats.tokenTimesEarnt = 0;
-	stats.tokenMessages = 0;
+	// Time
 	stats.endTime = 0;
+	// Tokens
+	stats.tokenMessages = 0;
+	stats.tokenTimesEarnt = 0;
+	stats.totalTokensEarnt = 0;
+	stats.season = "";
+	// Gems
+	stats.activityGems = 0;
+	stats.marketGems = 0;
+	stats.totalGems = 0;
+	// Custom
+	stats.goodnights = 0;
 }
 
-function bindEvents(BOT) {
+let running = true;
+
+// Allows for auto restarting
+function createBot() {
+	const BOT = mineflayer.createBot(OPTIONS);
+
 	// Detect Join
 	BOT.once("spawn", async () => {
 		// Set stats to 0 and set start time
@@ -299,8 +308,7 @@ function bindEvents(BOT) {
 		}
 		if (error.code == "ECONNRESET") {
 			// Auto reconnect
-			const BOT = mineflayer.createBot(OPTIONS);
-			bindEvents(BOT);
+			createBot();
 		} else {
 			stats.endTime = Date.now();
 			const MSG = messageCreator("exit", { stats });
@@ -317,8 +325,7 @@ function bindEvents(BOT) {
 		await sendWebhook("disconnect", { webhookInfo, msg: MSG });
 		console.log("Disconnected from server");
 		// Auto reconnect
-		const BOT = mineflayer.createBot(OPTIONS);
-		bindEvents(BOT);
+		createBot();
 	});
 
 	// Detect program stop
@@ -326,6 +333,10 @@ function bindEvents(BOT) {
 	process.on("SIGTERM", () => shutdown());
 
 	async function shutdown(){
+		if (!running){
+			return;
+		}
+		running = false;
 		stats.endTime = Date.now();
 		const MSG = messageCreator("exit", { stats });
 		await sendWebhook("disconnect", { webhookInfo, msg: MSG });
@@ -333,3 +344,5 @@ function bindEvents(BOT) {
 		process.exit();
 	}
 }
+
+createBot();
