@@ -7,7 +7,8 @@ const tokenList = {
 	Summer: "<a:summer_token_gif:876204768270364712>",
 	Autumn: "<:autumntoken:883775113168834581>", // Only one that isn't a gif ...
 	Winter: "<a:wintertoken_gif:906586240592265216>",
-	Anniversary: "<a:anniversarytoken:929131428376105021>"
+	Anniversary: "<a:anniversarytoken:929131428376105021>",
+	Valentines: "<:valentines_token:939622771443519498>"
 };
 
 // ################################################################################################################
